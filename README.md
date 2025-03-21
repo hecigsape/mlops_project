@@ -160,7 +160,6 @@ python src/monitoring/model_monitor.py
 - **Auditoría y logs** en AWS CloudTrail.
 - **Monitoreo de accesos** a la API del modelo.
 
-<<<<<<< HEAD
 
 ---
 
@@ -219,5 +218,3 @@ python src/monitoring/model_monitor.py
 
 
 ---
-=======
->>>>>>> 3af5d8d (fix: se cargan los datos y se realiza la ingesta de datos)
