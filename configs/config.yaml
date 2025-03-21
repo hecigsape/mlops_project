@@ -1,0 +1,24 @@
+general:
+  project_name: "MLOps_NLP"
+  seed: 42
+  data_dir: "data/"
+  processed_dir: "data/processed/"
+  raw_dir: "data/raw/"
+  models_dir: "src/models/checkpoints/"
+
+training:
+  batch_size: 32
+  epochs: 3
+  learning_rate: 5e-5
+  optimizer: "adam"
+  loss_function: "sparse_categorical_crossentropy"
+  validation_split: 0.2
+
+deployment:
+  use_sagemaker: true
+  sagemaker_instance_type: "ml.m5.large"
+  sagemaker_endpoint_name: "bert-nlp-endpoint"
+
+monitoring:
+  mlflow_tracking_uri: "http://localhost:5000"
+  val_accuracy_threshold: 0.85

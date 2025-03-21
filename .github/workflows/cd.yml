@@ -1,0 +1,67 @@
+name: Despliegue del Modelo NLP
+
+on:
+  push:
+    branches:
+      - main  # Ejecutar cuando haya cambios en la rama principal
+  schedule:
+    - cron: '0 3 * * 1'  # Ejecutar cada lunes a las 3 AM UTC
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 📦 Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+
+      - name: 🔄 Ejecutar Preprocesamiento
+        run: python src/data/preprocessing.py
+
+      - name: 🎯 Entrenar el Modelo
+        run: python src/models/train.py
+
+      - name: 📊 Evaluar el Modelo
+        id: evaluar
+        run: |
+          python src/models/evaluate.py > eval_output.txt
+          VAL_ACCURACY=$(grep 'Validation Accuracy' eval_output.txt | awk '{print $NF}')
+          echo "VAL_ACCURACY=$VAL_ACCURACY" >> $GITHUB_ENV
+
+      - name: ⚠️ Verificar Calidad del Modelo
+        run: |
+          if (( $(echo "$VAL_ACCURACY < 0.85" | bc -l) )); then
+            echo "🚫 La precisión del modelo es baja ($VAL_ACCURACY). Cancelando despliegue."
+            exit 1
+          fi
+
+      - name: 📤 Subir el modelo a AWS S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "us-east-1"
+          S3_BUCKET_URL: ${{ secrets.S3_BUCKET_URL }}
+        run: |
+          aws s3 cp src/models/checkpoints/bert_finetuned $S3_BUCKET_URL/bert_finetuned/ --recursive
+
+      - name: 🚀 Desplegar en AWS SageMaker
+        run: python src/deployment/sagemaker_deploy.py
+
+      - name: 📤 Publicar en GitHub Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          files: src/models/checkpoints/bert_finetuned/*
+          tag_name: latest-model
+          name: Modelo NLP Entrenado
+          body: "Última versión del modelo NLP fine-tuned con BERT."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

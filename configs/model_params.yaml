@@ -1,0 +1,22 @@
+model:
+  name: "bert-base-uncased"
+  num_labels: 2
+  dropout: 0.1
+
+training:
+  batch_size: 32
+  epochs: 3
+  learning_rate: 5e-5
+  weight_decay: 0.01
+  optimizer: "adamw"
+  loss_function: "sparse_categorical_crossentropy"
+
+hyperparameters:
+  max_length: 128
+  warmup_steps: 500
+  gradient_accumulation_steps: 2
+  logging_steps: 50
+
+evaluation:
+  metric: "accuracy"
+  threshold: 0.85

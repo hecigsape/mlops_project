@@ -1,0 +1,49 @@
+name: Monitoreo del Modelo NLP
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Ejecutar cada día a las 6 AM UTC
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 📦 Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+
+      - name: 📊 Obtener métricas del modelo en MLflow
+        id: obtener_metricas
+        run: |
+          python src/monitoring/model_monitor.py > metrics_output.txt
+          VAL_ACCURACY=$(grep 'Validation Accuracy' metrics_output.txt | awk '{print $NF}')
+          echo "VAL_ACCURACY=$VAL_ACCURACY" >> $GITHUB_ENV
+
+      - name: ⚠️ Verificar si el modelo ha perdido precisión
+        run: |
+          if (( $(echo "$VAL_ACCURACY < 0.85" | bc -l) )); then
+            echo "🚨 Precisión del modelo baja ($VAL_ACCURACY). Se necesita reentrenamiento."
+            exit 1
+          fi
+
+      - name: 📬 Enviar alerta por correo si la precisión baja
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASS }}
+          subject: "⚠️ Alerta de Monitoreo - Modelo NLP"
+          body: "El modelo ha bajado su precisión a $VAL_ACCURACY. Se recomienda reentrenarlo."
+          to: "tu-email@ejemplo.com"
+          from: "Monitoreo CI/CD"

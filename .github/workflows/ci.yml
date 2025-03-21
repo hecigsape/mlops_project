@@ -1,0 +1,52 @@
+name: Integración Continua (CI)
+
+on:
+  pull_request:
+    branches:
+      - main  # Ejecutar CI en cada PR hacia main
+  push:
+    branches:
+      - dev   # Ejecutar CI en cada push a la rama de desarrollo
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 📦 Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+
+      - name: 🧹 Verificar Estilo de Código con Flake8
+        run: |
+          pip install flake8
+          flake8 src --max-line-length=100
+
+      - name: 🧪 Ejecutar Pruebas Unitarias con Pytest
+        run: |
+          pip install pytest
+          pytest tests/
+
+      - name: 📊 Reporte de Cobertura de Código
+        run: |
+          pip install coverage
+          coverage run -m pytest
+          coverage report -m
+          coverage xml
+
+      - name: 📤 Subir Reporte de Cobertura a Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+
+      - name: ✅ Verificar Éxito de la CI
+        run: echo "CI Finalizada con éxito ✅"

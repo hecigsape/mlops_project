@@ -1,0 +1,9 @@
+{
+    "AWS_REGION": "us-east-1",
+    "S3_BUCKET_URL": "s3://mi-bucket-modelos/",
+    "SAGEMAKER_ROLE_ARN": "arn:aws:iam::123456789012:role/SageMakerExecutionRole",
+    "SAGEMAKER_INSTANCE_TYPE": "ml.m5.large",
+    "SAGEMAKER_ENDPOINT_NAME": "bert-nlp-endpoint",
+    "AWS_ACCESS_KEY_ID": "your-access-key",
+    "AWS_SECRET_ACCESS_KEY": "your-secret-key"
+  }
