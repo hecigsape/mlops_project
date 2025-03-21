@@ -1,0 +1,24 @@
+#  Librerías esenciales para el manejo de datos
+pandas==1.5.3
+numpy==1.24.3
+pyarrow==11.0.0  # Para trabajar con Apache Parquet
+
+#  Procesamiento de lenguaje natural (NLP)
+nltk==3.8.1
+spacy==3.5.3
+textblob==0.17.1
+langdetect==1.0.9
+
+#  Machine Learning y Modelado
+scikit-learn==1.2.2
+
+#  Procesamiento distribuido con PySpark
+pyspark==3.3.2
+
+#  Visualización de datos
+matplotlib==3.7.1
+seaborn==0.12.2
+wordcloud==1.9.2
+
+#  Manejo de logs y utilidades
+loguru==0.6.0
