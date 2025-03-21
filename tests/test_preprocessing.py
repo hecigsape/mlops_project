@@ -5,6 +5,16 @@ import os
 from src.data.preprocessing import filter_english_reviews, remove_neutral_reviews, clean_text
 from src.models.train import tokenize_data
 from src.models.evaluate import accuracy_score
+import os
+import requests
+import gzip
+import shutil
+
+import os
+import requests
+import gzip
+import shutil
+
 
 @pytest.fixture
 def sample_data():
@@ -44,4 +54,29 @@ def test_accuracy_score():
     assert 0 <= acc <= 1, "❌ La precisión debe estar entre 0 y 1."
 
 if __name__ == "__main__":
+    # Definir la URL del archivo y la ruta de destino
+    url = "https://datarepo.eng.ucsd.edu/mcauley_group/data/amazon_2023/raw/review_categories/Software.jsonl.gz"
+    download_path = "data/raw/Software.jsonl.gz"
+    extract_path = "data/raw/Software.jsonl"
+
+    # Crear el directorio si no existe
+    os.makedirs(os.path.dirname(download_path), exist_ok=True)
+
+    # Descargar el archivo
+    print("Descargando archivo...")
+    response = requests.get(url, stream=True)
+    with open(download_path, "wb") as file:
+        shutil.copyfileobj(response.raw, file)
+    print("Descarga completada.")
+
+    # Extraer el archivo .gz
+    print("Extrayendo archivo...")
+    with gzip.open(download_path, "rb") as f_in:
+        with open(extract_path, "wb") as f_out:
+            shutil.copyfileobj(f_in, f_out)
+    print("Extracción completada.")
+
+    # Opcional: eliminar el archivo comprimido
+    os.remove(download_path)
+    print("Archivo comprimido eliminado.")
     pytest.main()
