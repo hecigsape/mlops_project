@@ -23,7 +23,9 @@ jobs:
       - name: 📦 Instalar dependencias
         run: |
           pip install -r requirements.txt
-
+      - name: 📥 Descargar y extraer dataset
+        run: python src/data/download_data.py
+        
       - name: 🔄 Ejecutar Preprocesamiento
         run: python src/data/preprocessing.py
 
