@@ -1,4 +1,4 @@
-#  Librerías esenciales para el manejo de datos
+#  Librerías esenciales para manejo de datos
 pandas==1.5.3
 numpy==1.24.3
 pyarrow==11.0.0  # Para trabajar con Apache Parquet
@@ -11,6 +11,7 @@ langdetect==1.0.9
 
 #  Machine Learning y Modelado
 scikit-learn==1.2.2
+mlflow==2.3.1  # Para control de experimentos y versionado de modelos
 
 #  Procesamiento distribuido con PySpark
 pyspark==3.3.2
@@ -20,5 +21,18 @@ matplotlib==3.7.1
 seaborn==0.12.2
 wordcloud==1.9.2
 
-#  Manejo de logs y utilidades
+#  Monitoreo y MLOps
+boto3==1.26.0  # Interacción con AWS (S3, SageMaker, etc.)
+mlflow-skinny==2.3.1  # Seguimiento de experimentos (sin dependencias extra)
+dvc==2.50.0  # Data Version Control para el pipeline
+great-expectations==0.16.0  # Para validaciones de calidad de datos
+
+#  Servir el modelo y despliegue
+fastapi==0.95.0
+uvicorn==0.22.0
+
+#  Pytest para pruebas unitarias
+pytest==7.2.2
+
+#  Manejo de logs
 loguru==0.6.0
