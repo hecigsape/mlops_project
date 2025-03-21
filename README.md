@@ -218,3 +218,22 @@ python src/monitoring/model_monitor.py
 
 
 ---
+## 🔥 Arquitectura del Proyecto
+
+Este repositorio implementa una arquitectura basada en **MLOps** utilizando AWS, GitHub Actions y SageMaker. A continuación, se muestra un diagrama del flujo completo.
+
+**Descripción del Diagrama de Arquitectura MLOps:**
+
+- 🔄 **Control de Versiones:** Integración con GitHub y pipelines de CI/CD automatizados
+- 📊 **Procesamiento:** Datos almacenados en S3 y procesados con AWS Lambda
+- 🎯 **Entrenamiento:** SageMaker gestiona el entrenamiento con seguimiento en MLflow
+- 🌐 **Despliegue:** Endpoints de SageMaker expuestos vía API Gateway
+- 📡 **Monitoreo:** Supervisión continua con CloudWatch y alertas SNS
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)
+
+![alt text](image-3.png)
+
+![alt text](image-4.png)
